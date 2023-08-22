@@ -1,0 +1,28 @@
+Bad news everyone. It is with immense regret that I write to inform you we have suffered a total loss of data for firefish.lgbt, musician.social, and outdoors.lgbt.
+
+How did we get here?
+
+During a routine #GitOps repository cleanup a subdirectory containing yaml manifests that create our namespaces was moved to directory not visible by ArgoCD. From Argo’s perspective, the directory and yaml manifests no longer existed so it went to do its job and clean things up. Had the directory just contained the manifests for the Helm deployments, this would have been okay as the Persistent Volume Claims would have persisted, but deleting a namespace deletes everything it contains.
+
+Didn’t you have backups?
+
+Yes and also apparently no. We use #Velero to capture backups of our cluster every 6 hours. From what I had seen our backups had been running successfully. I discovered once the incident started that backups had captured everything but the Persistent Volume Claim data.  While manual backup and restore tests were run once a month to ensure our backups were functioning, they were run manually. After digging into why our restores were not coming up with data, I found that our recurring backups were missing the flag to run volume backups with Restic which snapshots PVC block volume data.
+
+What about snapshots?
+
+In the past I had to move away from the big 3 cloud providers in order to make hosting financially feasible. Vultr was chosen since it offers a fully managed #Kubernetes while still being affordable. The downside to that was not having PVC snapshots support built into Velero, which I took as an acceptable risk since we had block level backup support with Rustic and our tests had shown it to function well.
+
+What about contacting the cloud provider?
+
+Well… I did. They don’t keep backups of customer’s PVCs and suggest using something Restic to do so.
+
+What does this mean?
+
+To put it bluntly: everything is gone and there is no recourse to get it back. I fucked up. I do not take it at all lightly that the Fediverse has been a home and safe place for many individuals, including myself, and the feeling of loss and regret here is, to be honest, crippling. The fact that so many people will be affected by this is not lost on me. I am so so so incredibly sorry to those who have placed your trust in me only to have that trust be betrayed. I can’t apologize enough.
+
+What happens going forward?
+
+I won’t personally be bringing back outdoors.lgbt or firefish.lgbt. Being an admin has been one of the most fulfilling things I have done in a long time and you all have made it such an amazing experience., however, I need to take a step back.I would love to hand the domains over to someone with a similar passion for creating a safe and welcoming community.
+
+I love you all. I am so sorry for letting you all down, and I wish you the absolute best.
+- @lily@firefish.social
